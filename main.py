@@ -1,45 +1,71 @@
+from game import new_game, available_actions, apply_action, is_win, is_game_over
+
 def start_game():
     print("🏝️ MYSTERY ISLAND: THE LOST LIGHTHOUSE 🔦")
-    print("your adventure begins! ")
-def show_island_locations():
-    print("1. Beach🏖️")
-    print("2. Light house🔦")
-    print("3. Cave🦇")
-    print("4. Old bridge🌉")
-    print("5. Jungle🌳")
-    user_location_choice = input("Explorer, chose your destination! ")
-    if user_location_choice == "1":
-        beach_adventure()
-    elif user_location_choice == "2":
-        lighthouse_adventure()
-    elif user_location_choice == "3":
-        cave_adventure()
-    elif user_location_choice == "4":
-        old_bridge_adventure()
-    elif user_location_choice == "5":
-        jungle_adventure()
-    else:
-        print("Invalid destination! Please choose between 1 and 5.")
+    print("You woke up on Mystery Island after a terrible storm.")
+    print("The lighthouse is dark, and a rescue boat is waiting somewhere beyond the island.")
+    print("Your mission is to restore the lighthouse beacon before you run out of energy.")
+    print("Explore the island, collect useful objects and solve the challenges.")
+    print("You have 5 energy points. Every legal move consumes 1 energy point.")
+    print()
 
-def beach_adventure():
-    print("Explorer, you are welcome to the beach! ")
-    print("You have discovered an old map")  
-def lighthouse_adventure():
-    print("Explorer, you are welcome to the lighthouse! ")
-    print("You discovered that the entrance is locked! ")
-def cave_adventure():
-    print("welcome to the wonders of the cave! ")
-    print("You discovered a mysterious crystal hidden inside the cave! 💎")
-def old_bridge_adventure():
-    print("Welcome to the forgotten old bridge")
-    print("The bridge is broken! you will need to find another way across")  
-def jungle_adventure():
-    print("Seems like you made it the jungle! ")
-    print("You discovered a hidden pathway leading deeper into the island! 🌿 ")    
-user_choice = input("Do you want to PLAY or EXIT? ")                                                  
-if user_choice == "play":
+def play_game():
+    player_name = input("Explorer, what is your name? ").strip()
+
+    if player_name == "":
+        player_name = "Explorer"
+
+    player = new_game(player_name)
+
+    print()
+    print("Welcome to Mystery Island, " + player["name"] + "!")
+    print("Your adventure begins at the Beach.")
+    print()
+
+    while not is_game_over(player):
+        print("-----------------------------------")
+        print("📍 Current location:", player["location"])
+        print("⚡ Energy:", player["energy"])
+        print("🎒 Inventory:", player["inventory"])
+        print("-----------------------------------")
+
+        print("What would you like to do?")
+
+        actions = available_actions(player)
+
+        for action in actions:
+            print("- " + action)
+
+        user_action = input("\nEnter your action: ")
+
+        result = apply_action(player, user_action)
+
+        print()
+        print(result)
+        print()
+
+    if is_win(player):
+        print("🏆 CONGRATULATIONS, " + player["name"] + "!")
+        print("You successfully escaped Mystery Island!")
+    elif player["energy"] == 0:
+        print("💀 You lost! You ran out of energy before completing your mission.")
+    print()
+
+def main():
     start_game()
-    show_island_locations()
-else:
-    print("Good bye, explore! ")
 
+    while True:
+        play_game()
+
+        replay = input("Would you like to play again? (yes/no): ").strip().lower()
+
+        if replay != "yes":
+            print("Thank you for playing Mystery Island! Goodbye! 🏝️")
+            break
+
+        print()
+        print("Starting a new adventure...")
+        print()
+
+if __name__ == "__main__":
+    main()
